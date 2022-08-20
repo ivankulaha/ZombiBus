@@ -1,14 +1,20 @@
 using Microsoft.EntityFrameworkCore;
+using ZombiBus.Core;
 using ZombiBus.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<ZombiDbContext>(o => o.UseSqlite("Data Source=Persistance/database.db"));
+builder.Services.AddTransient<IDeadLetterConnectionRepository, DeadLetterConnectionRepository>();
 
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+await scope.ServiceProvider.GetRequiredService<ZombiDbContext>().Database.MigrateAsync();
+scope.Dispose();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -24,9 +30,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();

@@ -5,5 +5,9 @@ namespace ZombiBus.Persistance;
 
 public class ZombiDbContext : DbContext
 {
-    public DbSet<DeadLetterConnection> Zombies { get; set; }
+    public ZombiDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
+    public DbSet<DeadLetterConnection> DeadLetterConnections { get; set; }
 }
