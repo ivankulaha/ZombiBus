@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using ZombiBus.Core;
 using ZombiBus.Persistance;
@@ -7,7 +9,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<ZombiDbContext>(o => o.UseSqlite("Data Source=Persistance/database.db"));
+ builder.Services.AddHangfire(configuration => configuration
+     .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+     .UseSimpleAssemblyNameTypeSerializer()
+     .UseRecommendedSerializerSettings()
+     .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+     {
+         CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+         SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+         QueuePollInterval = TimeSpan.Zero,
+         UseRecommendedIsolationLevel = true,
+         DisableGlobalLocks = true
+     }));
+
+builder.Services.AddHangfireServer();
+
+builder.Services.AddDbContext<ZombiDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("HangfireConnection")));
 builder.Services.AddTransient<IDeadLetterConnectionRepository, DeadLetterConnectionRepository>();
 
 var app = builder.Build();
@@ -31,5 +48,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.MapRazorPages();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHangfireDashboard();
+});
+app.UseHangfireDashboard();
 
 app.Run();

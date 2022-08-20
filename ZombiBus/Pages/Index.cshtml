@@ -9,12 +9,14 @@
 
 <h1>Dead letters</h1>
 <form method="post">
+    <a asp-page="./Create">Create New</a>
+    
     <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th></th>
+                <th>Queue name</th>
+                <th>Connection string</th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +25,7 @@
             foreach (var connection in Model.DeadLetterConnections)
             {
                 <tr>
-                    <td> @connection.Id </td>
+                    <td>@connection.Id </td>
                     <td>@connection.QueueName</td>
                     <td>@connection.ConnectionString</td>
                     <td>
@@ -39,5 +41,4 @@
         }
         </tbody>
     </table>
-    <a asp-page="./Create">Create New</a>
 </form>

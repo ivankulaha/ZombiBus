@@ -12,10 +12,10 @@ namespace ZombiBus.Persistance.Migrations
                 name: "DeadLetterConnections",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    QueueName = table.Column<string>(type: "TEXT", nullable: false),
-                    ConnectionString = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    QueueName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ConnectionString = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,7 +25,8 @@ namespace ZombiBus.Persistance.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "DeadLetterConnections");
+            migrationBuilder.DropTable(
+                name: "DeadLetterConnections");
         }
     }
 }

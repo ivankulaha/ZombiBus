@@ -5,25 +5,18 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>804e782e-483f-49ae-9ef7-5c9b209031d2</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
+      <PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
+      <PackageReference Include="Hangfire.SqlServer" Version="1.7.31" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.7">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Views\DeadLetter\Create.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\DeadLetter\Index.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\DeadLetter\Privacy.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\Error.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\_ViewImports.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
     </ItemGroup>
 
 </Project>
