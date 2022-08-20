@@ -2,7 +2,12 @@
 @model ZombiBus.Pages.IndexModel;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<h1>Contacts home page</h1>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<h1>Dead letters</h1>
 <form method="post">
     <table class="table">
         <thead>
@@ -23,10 +28,10 @@
                     <td>@connection.ConnectionString</td>
                     <td>
                         <!-- <snippet_Edit> -->
-                        <a asp-page="./Edit" asp-route-id="@connection.Id">Edit</a> |
+                        <a class="btn btn-secondary" asp-page="./Edit" asp-route-id="@connection.Id">Edit</a> |
                         <!-- </snippet_Edit> -->
                         <!-- <snippet_Delete> -->
-                        <button type="submit" asp-page-handler="delete" asp-route-id="@connection.Id">delete</button>
+                        <button class="btn btn-secondary" type="submit" asp-page-handler="delete" asp-route-id="@connection.Id">delete</button>
                         <!-- </snippet_Delete> -->
                     </td>
                 </tr>

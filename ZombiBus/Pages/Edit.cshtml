@@ -1,0 +1,43 @@
+@page "{id:int}"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ZombiBus.Pages.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_Layout";
+}
+
+<h1 xmlns="http://www.w3.org/1999/html">Edit</h1>
+
+<h4>Customer</h4>
+<hr />  
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Connection!.Id" />
+            <div class="form-group">
+                <span asp-validation-for="Connection!.ConnectionString" class="text-danger"></span> <br/>
+                <span asp-validation-for="Connection!.QueueName" class="text-danger"></span> <br/>
+                <label asp-for="Connection!.QueueName" class="control-label"></label>
+                <input asp-for="Connection!.QueueName" /><br/>
+                
+                <label asp-for="Connection!.ConnectionString" class="control-label"></label>
+                <input asp-for="Connection!.ConnectionString" /><br/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

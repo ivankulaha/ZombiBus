@@ -17,6 +17,11 @@ public class DeadLetterConnectionRepository : IDeadLetterConnectionRepository
         _dbContext.Add(entity);
     }
 
+    public void Remove(DeadLetterConnection entity)
+    {
+        _dbContext.Remove(entity);
+    }
+
     public Task SaveChanges()
     {
         return _dbContext.SaveChangesAsync();
@@ -25,5 +30,15 @@ public class DeadLetterConnectionRepository : IDeadLetterConnectionRepository
     public async Task<IEnumerable<DeadLetterConnection>> GetAll()
     {
         return await _dbContext.DeadLetterConnections.ToListAsync();
+    }
+
+    public async Task<DeadLetterConnection?> Find(int id)
+    {
+        return await _dbContext.DeadLetterConnections.FindAsync(id);
+    }
+
+    public void Update(DeadLetterConnection connection)
+    {
+        _dbContext.Attach(connection);
     }
 }

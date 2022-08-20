@@ -22,13 +22,13 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        // var contact = await _context.Customer.FindAsync(id);
-        //
-        // if (contact != null)
-        // {
-        //     _context.Customer.Remove(contact);
-        //     await _context.SaveChangesAsync();
-        // }
+        var contact = await _repository.Find(id);
+        
+        if (contact != null)
+        {
+            _repository.Remove(contact);
+            await _repository.SaveChanges();
+        }
 
         await Task.CompletedTask;
 
