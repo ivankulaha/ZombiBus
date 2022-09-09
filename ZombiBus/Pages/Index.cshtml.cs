@@ -7,10 +7,12 @@ namespace ZombiBus.Pages;
 public class IndexModel : PageModel
 {
     private readonly IDeadLetterConnectionRepository _repository;
-    
-    public IndexModel(IDeadLetterConnectionRepository repository)
+    private readonly IDeadLetterListenerScheduler _deadLetterListenerScheduler;
+
+    public IndexModel(IDeadLetterConnectionRepository repository, IDeadLetterListenerScheduler deadLetterListenerScheduler)
     {
         _repository = repository;
+        _deadLetterListenerScheduler = deadLetterListenerScheduler;
     }
 
     public IList<DeadLetterConnection>? DeadLetterConnections { get; set; }
@@ -22,15 +24,29 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        var contact = await _repository.Find(id);
+        var connection = await _repository.Find(id);
         
-        if (contact != null)
+        if (connection != null)
         {
-            _repository.Remove(contact);
+            _repository.Remove(connection);
             await _repository.SaveChanges();
         }
 
-        await Task.CompletedTask;
+        return new PageResult();
+    }
+    
+    public async Task<IActionResult> OnPostWatchAsync(int id)
+    {
+        var contact = await _repository.Find(id);
+        await _deadLetterListenerScheduler.Start(contact!);
+
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostStopWatchAsync(int id)
+    {
+        var contact = await _repository.Find(id);
+        await _deadLetterListenerScheduler.Stop(contact!);
 
         return RedirectToPage();
     }

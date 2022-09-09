@@ -10,4 +10,5 @@ public class ZombiDbContext : DbContext
     }
 
     public DbSet<DeadLetterConnection> DeadLetterConnections { get; set; }
+    public DbSet<DeadLetter> DeadLetters { get; set; }
 }

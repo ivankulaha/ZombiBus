@@ -9,6 +9,6 @@ public class DeadLetterConnection
     [Required, MaxLength(100)]
     public string QueueName { get; set; }
     
-    [Required, MaxLength(100)]
+    [Required, MaxLength(1024)]
     public string ConnectionString { get; set; }
 }

@@ -2,6 +2,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using ZombiBus.Core;
+using ZombiBus.Core.Azure;
 using ZombiBus.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
- builder.Services.AddHangfire(configuration => configuration
+builder.Services.AddHangfire(configuration => configuration
      .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
      .UseSimpleAssemblyNameTypeSerializer()
      .UseRecommendedSerializerSettings()
@@ -25,7 +26,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddHangfireServer();
 
 builder.Services.AddDbContext<ZombiDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("HangfireConnection")));
-builder.Services.AddTransient<IDeadLetterConnectionRepository, DeadLetterConnectionRepository>();
+builder.Services.AddScoped<IDeadLetterConnectionRepository, DeadLetterConnectionRepository>();
+builder.Services.AddSingleton<IDeadLetterListenerScheduler, DeadLetterListenerScheduler>();
+builder.Services.AddScoped<IDeadLetterRepository, DeadLetterRepository>();
+builder.Services.AddSingleton<IAzureServiceBusDeadLettersPuller, AzureServiceBusDeadLettersPuller>();
 
 var app = builder.Build();
 

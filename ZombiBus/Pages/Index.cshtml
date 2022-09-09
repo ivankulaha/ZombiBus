@@ -29,11 +29,13 @@
                     <td>@connection.QueueName</td>
                     <td>@connection.ConnectionString</td>
                     <td>
+                        <button class="btn btn-secondary" type="submit" asp-page-handler="Watch" asp-route-id="@connection.Id">Watch</button>
+                        <button class="btn btn-secondary" type="submit" asp-page-handler="StopWatch" asp-route-id="@connection.Id">Stop Watch</button>
                         <!-- <snippet_Edit> -->
                         <a class="btn btn-secondary" asp-page="./Edit" asp-route-id="@connection.Id">Edit</a> |
                         <!-- </snippet_Edit> -->
                         <!-- <snippet_Delete> -->
-                        <button class="btn btn-secondary" type="submit" asp-page-handler="delete" asp-route-id="@connection.Id">delete</button>
+                        <button class="btn btn-secondary" type="submit" asp-page-handler="delete" asp-route-id="@connection.Id">Delete</button>
                         <!-- </snippet_Delete> -->
                     </td>
                 </tr>

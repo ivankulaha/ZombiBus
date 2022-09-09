@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZombiBus.Persistance;
 
@@ -11,9 +12,10 @@ using ZombiBus.Persistance;
 namespace ZombiBus.Persistance.Migrations
 {
     [DbContext(typeof(ZombiDbContext))]
-    partial class ZombiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220909170418_DeadLetterEntity")]
+    partial class DeadLetterEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

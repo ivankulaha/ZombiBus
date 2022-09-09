@@ -1,6 +1,6 @@
 namespace ZombiBus.Core.Azure;
 
-public interface IAzureServiceBusDeadLettersPuller
+public interface IAzureServiceBusDeadLettersPuller : IAsyncDisposable
 {
-    Task<List<DeadLetter>> Pull(DeadLetterConnection connection);
+    Task<List<DestroyableDeadLetter>> Pull(DeadLetterConnection connection);
 }

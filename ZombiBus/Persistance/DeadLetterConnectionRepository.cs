@@ -40,5 +40,6 @@ public class DeadLetterConnectionRepository : IDeadLetterConnectionRepository
     public void Update(DeadLetterConnection connection)
     {
         _dbContext.Attach(connection);
+        _dbContext.Entry(connection).State = EntityState.Modified;
     }
 }

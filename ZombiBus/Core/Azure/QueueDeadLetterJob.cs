@@ -2,32 +2,42 @@ namespace ZombiBus.Core.Azure;
 
 public class QueueDeadLetterJob
 {
-    private readonly IDeadLetterRepository _deadLetterRepository;
-    private readonly IAzureServiceBusDeadLettersPuller _puller;
-    private readonly IDeadLetterConnectionRepository _repository;
+    private readonly IServiceProvider _serviceProvider;
 
-    public QueueDeadLetterJob(
-        IDeadLetterRepository deadLetterRepository,
-        IAzureServiceBusDeadLettersPuller puller,
-        IDeadLetterConnectionRepository repository)
+    public QueueDeadLetterJob(IServiceProvider serviceProvider)
     {
-        _deadLetterRepository = deadLetterRepository;
-        _puller = puller;
-        _repository = repository;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task Run()
     {
-        var connections = await _repository.GetAll();
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var connectionRepository = _serviceProvider.GetRequiredService<IDeadLetterConnectionRepository>();
+        var puller = _serviceProvider.GetRequiredService<IAzureServiceBusDeadLettersPuller>();
+        var deadLetterRepository = _serviceProvider.GetRequiredService<IDeadLetterRepository>();
+        
+        var connections = await connectionRepository.GetAll();
         foreach (var connection in connections)
         {
-            var deadLetters = await _puller.Pull(connection);
-            foreach (var deadLetter in deadLetters)
+            
+            List<DestroyableDeadLetter> deadLetters;
+            do
             {
-                _deadLetterRepository.Add(deadLetter);
-            }
-        }
+                deadLetters = await puller.Pull(connection);
+                foreach (var destroyableDeadLetter in deadLetters)
+                {
+                    deadLetterRepository.Add(destroyableDeadLetter.DeadLetter);
+                }
 
-        await _repository.SaveChanges();
+                await connectionRepository.SaveChanges();
+
+                foreach (var destroyableDeadLetter in deadLetters)
+                {
+                    await destroyableDeadLetter.Destroy();
+                }
+            } while (deadLetters.Any());
+
+            await puller.DisposeAsync();
+        }
     }
 }
